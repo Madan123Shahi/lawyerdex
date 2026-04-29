@@ -1,0 +1,24 @@
+/**
+ * Custom Application Error class
+ * Extends the native Error to include HTTP status codes and operational flags.
+ */
+class AppError extends Error {
+  constructor(message, statusCode, errors = null) {
+    super(message);
+    this.statusCode = statusCode;
+    this.status = statusCode >= 400 && statusCode < 500 ? 'fail' : 'error';
+    this.isOperational = true; // distinguishes expected errors from programming bugs
+    this.errors = errors; // optional field-level validation errors (from Zod)
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+/**
+ * asyncHandler wraps async route handlers to avoid repetitive try/catch.
+ * Any thrown error is forwarded to the centralized error middleware via next().
+ */
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+module.exports = { AppError, asyncHandler };
