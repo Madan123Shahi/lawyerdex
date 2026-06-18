@@ -1,12 +1,22 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
-const { register, login, getMe } = require('../controllers/authController');
-const { protect } = require('../middleware/authMiddleware');
-const { validate } = require('../middleware/validateMiddleware');
-const { registerSchema, loginSchema } = require('../validators/authValidators');
+import {
+  register,
+  login,
+  getMe,
+  refresh,
+  changePassword,
+  logout,
+} from "../controllers/authController.js";
+import { protect } from "../middleware/authMiddleware.js";
+import { validate } from "../middleware/validateMiddleware.js";
+import { registerSchema, loginSchema } from "../validators/authValidators.js";
 
-router.post('/register', validate(registerSchema), register);
-router.post('/login', validate(loginSchema), login);
-router.get('/me', protect, getMe);
+router.post("/register", validate(registerSchema), register);
+router.post("/login", validate(loginSchema), login);
+router.post("/refresh", refresh); // called by your frontend silently
+router.patch("/change-password", protect, changePassword);
+router.post("/logout", protect, logout);
+router.get("/me", protect, getMe);
 
-module.exports = router;
+export default router;
