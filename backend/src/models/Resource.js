@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const resourceSchema = new mongoose.Schema(
   {
@@ -6,17 +6,17 @@ const resourceSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true },
     excerpt: { type: String, required: true },
     content: { type: String, required: true },
-    coverImage: { type: String, default: '' },
+    coverImage: { type: String, default: "" },
     category: { type: String, required: true },
     tags: [{ type: String }],
-    author: { type: String, default: 'LawyerDex Team' },
+    author: { type: String, default: "LawyerDex Team" },
     readTime: { type: Number, default: 5 },
     isPublished: { type: Boolean, default: true },
     viewCount: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-resourceSchema.index({ title: 'text', content: 'text' });
+resourceSchema.index({ title: "text", content: "text" });
 
-module.exports = mongoose.model('Resource', resourceSchema);
+export default mongoose.model("Resource", resourceSchema);

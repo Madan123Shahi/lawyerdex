@@ -1,12 +1,17 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
-const { getLawyers, getLawyer, getFeaturedLawyers, getCategories } = require('../controllers/lawyerController');
-const { validateQuery } = require('../middleware/validateMiddleware');
-const { lawyerSearchSchema } = require('../validators/lawyerValidators');
+import {
+  getLawyers,
+  getLawyer,
+  getFeaturedLawyers,
+  getCategories,
+} from "../controllers/lawyerController.js";
+import { validateQuery } from "../middleware/validateMiddleware.js";
+import { lawyerSearchSchema } from "../../../shared/schemas/lawyerValidators.js";
 
-router.get('/', validateQuery(lawyerSearchSchema), getLawyers);
-router.get('/featured', getFeaturedLawyers);
-router.get('/categories', getCategories);
-router.get('/:id', getLawyer);
+router.get("/", validateQuery(lawyerSearchSchema), getLawyers);
+router.get("/featured", getFeaturedLawyers);
+router.get("/categories", getCategories);
+router.get("/:id", getLawyer);
 
-module.exports = router;
+export default router;

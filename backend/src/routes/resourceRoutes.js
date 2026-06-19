@@ -1,9 +1,13 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
-const { getResources, getResource, getLatestResources } = require('../controllers/resourceController');
+import {
+  getResources,
+  getResource,
+  getLatestResources,
+} from "../controllers/resourceController.js";
 
-router.get('/', getResources);
-router.get('/latest', getLatestResources);
-router.get('/:slug', getResource);
+router.get("/", getResources);
+router.get("/latest", getLatestResources);
+router.get("/:slug", getResource);
 
-module.exports = router;
+export default router;

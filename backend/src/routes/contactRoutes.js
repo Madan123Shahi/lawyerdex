@@ -1,9 +1,8 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
-const { submitContact } = require('../controllers/contactController');
-const { validate } = require('../middleware/validateMiddleware');
-const { contactSchema } = require('../validators/lawyerValidators');
+import { submitContact } from "../controllers/contactController.js";
+import { validate } from "../middleware/validateMiddleware.js";
+import { contactSchema } from "../../../shared/schemas/lawyerValidators.js";
 
-router.post('/', validate(contactSchema), submitContact);
-
-module.exports = router;
+router.post("/", validate(contactSchema), submitContact);
+export default router;

@@ -1,26 +1,26 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const reviewSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     name: String,
     rating: { type: Number, min: 1, max: 5 },
     comment: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const lawyerSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
-    phone: { type: String, default: '' },
-    avatar: { type: String, default: '' },
-    bio: { type: String, default: '' },
+    phone: { type: String, default: "" },
+    avatar: { type: String, default: "" },
+    bio: { type: String, default: "" },
     location: {
-      city: { type: String, default: '' },
-      state: { type: String, default: '' },
-      country: { type: String, default: 'USA' },
+      city: { type: String, default: "" },
+      state: { type: String, default: "" },
+      country: { type: String, default: "USA" },
     },
     practiceAreas: [{ type: String }],
     category: { type: String, required: true },
@@ -40,10 +40,10 @@ const lawyerSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Text index for search
-lawyerSchema.index({ name: 'text', bio: 'text', category: 'text' });
+lawyerSchema.index({ name: "text", bio: "text", category: "text" });
 
-module.exports = mongoose.model('Lawyer', lawyerSchema);
+export default mongoose.model("Lawyer", lawyerSchema);

@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
@@ -34,7 +34,7 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-UserSchema.methods.changedPasswordAfter = function (jwtIssuedAt) {
+userSchema.methods.changedPasswordAfter = function (jwtIssuedAt) {
   if (this.passwordChangedAt) {
     const changedAt = Math.floor(this.passwordChangedAt.getTime() / 1000);
     return jwtIssuedAt < changedAt; // true = password changed AFTER token was issued
@@ -42,4 +42,4 @@ UserSchema.methods.changedPasswordAfter = function (jwtIssuedAt) {
   return false;
 };
 
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);

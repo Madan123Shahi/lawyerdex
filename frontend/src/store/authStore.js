@@ -1,20 +1,26 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+// frontend/src/store/authStore.js
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const useAuthStore = create(
   persist(
     (set) => ({
       user: null,
-      token: null,
       isAuthenticated: false,
 
-      setAuth: ({ user, token }) => set({ user, token, isAuthenticated: true }),
-      logout: () => set({ user: null, token: null, isAuthenticated: false }),
-      updateUser: (user) => set((state) => ({ user: { ...state.user, ...user } })),
+      // token is GONE — it lives in the HTTP-only cookie, not JS memory
+      setAuth: ({ user }) => set({ user, isAuthenticated: true }),
+      logout: () => set({ user: null, isAuthenticated: false }),
+      updateUser: (updates) =>
+        set((state) => ({ user: { ...state.user, ...updates } })),
     }),
     {
-      name: 'lawyerdex-auth',
-      partialize: (state) => ({ token: state.token, user: state.user, isAuthenticated: state.isAuthenticated }),
-    }
-  )
+      name: "lawyerdex-auth",
+      // only persist non-sensitive UI state — token never touches localStorage
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
 );
