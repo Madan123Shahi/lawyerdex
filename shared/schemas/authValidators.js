@@ -74,3 +74,84 @@ export const changePasswordSchema = z
     message: "New password must be different from your current password.",
     path: ["newPassword"],
   });
+
+// Helper validator for MongoDB ObjectIDs (24-char hex string)
+const objectIdSchema = z
+  .string()
+  .regex(/^[0-9a-fA-F]{24}$/, { message: "Invalid MongoDB ObjectId" });
+
+// ==========================================
+// 1. Sub-Schemas (Nested Documents)
+// ==========================================
+
+export const ReviewZodSchema = z.object({
+  user: objectIdSchema.optional(),
+  rating: z.number().min(1).max(5),
+  comment: z.string().trim().optional(),
+  isAnonymous: z.boolean().default(false),
+});
+
+export const EducationZodSchema = z.object({
+  degree: z.string().trim().min(1, "Degree is required"),
+  institution: z.string().trim().min(1, "Institution is required"),
+  year: z
+    .number()
+    .int()
+    .min(1900)
+    .max(new Date().getFullYear() + 5),
+});
+
+// ==========================================
+// 2. Main Lawyer Schema
+// ==========================================
+
+export const LawyerZodSchema = z
+  .object({
+    user: objectIdSchema,
+    phone: z
+      .string()
+      .trim()
+      .min(1, "Phone number is required")
+      .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format"), // E.164 standard format
+
+    avatar: z
+      .string()
+      .url("Avatar must be a valid URL")
+      .or(z.literal(""))
+      .default(""),
+    bio: z.string().trim().default(""),
+
+    address: z
+      .object({
+        street: z.string().trim().optional(),
+        city: z.string().trim().optional(),
+        state: z.string().trim().optional(),
+        postalCode: z.string().trim().optional(),
+      })
+      .optional(),
+
+    practiceAreas: z.array(z.string().trim()).default([]),
+    barNumber: z.string().trim().min(1, "Bar number is required"),
+    licenseUpload: z
+      .string()
+      .url("License upload must be a valid document URL or path"),
+    category: z.string().trim().min(1, "Category is required"),
+
+    experience: z.number().nonnegative().default(0),
+
+    verificationStatus: z
+      .enum(["pending", "verified", "rejected"])
+      .default("pending"),
+    rejectionReason: z.string().trim().default(""),
+
+    rating: z.number().min(0).max(5).default(0),
+    reviewCount: z.number().int().nonnegative().default(0),
+    reviews: z.array(ReviewZodSchema).default([]),
+
+    isVerified: z.boolean().default(false),
+    isFeatured: z.boolean().default(false),
+    consultationFee: z.number().nonnegative().default(0),
+    languages: z.array(z.string().trim()).default([]),
+    education: z.array(EducationZodSchema).default([]),
+  })
+  .strict(); // Throws an error if client submits extra unmapped fields

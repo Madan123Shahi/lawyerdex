@@ -13,11 +13,7 @@ const userSchema = new mongoose.Schema(
     },
     password: { type: String, required: true, minlength: 8, select: false },
     passwordChangedAt: { type: Date, select: false },
-    role: { type: String, enum: ["user", "admin", "lawyer"], default: "user" },
-    avatar: { type: String, default: "" },
-    isVerified: { type: Boolean, default: false },
-    tokenVersion: { type: Number, default: 0, select: false },
-    lastFingerprint: { type: String, select: false },
+    role: { type: String, enum: ["client", "lawyer"], default: "client" },
   },
   { timestamps: true },
 );
